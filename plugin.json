@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "kova",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Kova strategy creation and portfolio alignment workflows for compatible AI agents.",
   "author": {
     "name": "Kova",

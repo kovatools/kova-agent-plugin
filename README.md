@@ -84,10 +84,10 @@ To update a cloned copy, run `git -C ~/.cursor/plugins/local/kova pull --ff-only
 Clone a release, then copy or symlink the repository root into the directory your client scans for plugins:
 
 ```sh
-git clone --branch v0.1.0 --depth 1 https://github.com/kovatools/kova-agent-plugin.git
+git clone --branch v0.1.1 --depth 1 https://github.com/kovatools/kova-agent-plugin.git
 ```
 
-If Git is unavailable, download the `v0.1.0` source archive from GitHub, extract it, and register the extracted repository root as a local plugin directory.
+If Git is unavailable, download the `v0.1.1` source archive from GitHub, extract it, and register the extracted repository root as a local plugin directory.
 
 Registration, update, and uninstall behavior belongs to the client because Agent Plugins v1 defines the package format, not a universal installer. Consult the [compatible clients list](https://agent-plugins.org/compatible-clients) and your client's documentation. To update a clone tracking `main`, use `git pull --ff-only`; for an immutable release, replace the clone with a newer SemVer tag. To uninstall, unregister the plugin root and remove only that local clone or symlink.
 
@@ -104,36 +104,9 @@ Kova uses OAuth with PKCE. Local clients may use an exact `http://localhost`, `h
 
 To revoke a connection, remove its Kova API token from your account. Uninstalling the plugin does not revoke an already issued token.
 
-## Client validation matrix
+## Releases and support
 
-Release `v0.1.0` completed canonical-package validation on August 9, 2026. Production OAuth and the read-only strategy list/show smoke were carried forward only after an exact comparison confirmed that the plugin MCP manifest and Kova's OAuth and MCP authentication runtime were unchanged from the tested baseline. The public-source VS Code confirmation remains a launch gate after the immutable tag exists; it does not change this package snapshot.
-
-| Client | Validation target | Validated route | Release status |
-| --- | --- | --- | --- |
-| VS Code | 1.132.0 | Disposable local source through `chat.pluginLocations` | Final two-skill copy, refresh, and uninstall passed; production OAuth and read-only strategy list/show carried forward after the unchanged-auth check; direct Git remains the post-publication native gate |
-| Cursor | 3.15.6 | Disposable package copy under a Cursor-style `plugins/local` root | Native compatibility confirmed; final two-skill copy, refresh, and uninstall passed; production OAuth and read-only strategy list/show carried forward |
-| Codex | 0.146.0 | Disposable local compatibility shim and marketplace | Install, exact two-skill discovery, mixed-asset no-tool smoke, cachebuster update, and uninstall passed; production OAuth and read-only strategy list/show carried forward |
-
-## Package layout
-
-```text
-.
-├── plugin.json
-├── mcp.json
-├── skills/
-│   ├── create-or-refine-strategy/SKILL.md
-│   └── check-strategy-alignment/SKILL.md
-├── README.md
-└── LICENSE
-```
-
-There is intentionally no marketplace manifest or client-specific package format in this repository.
-
-## Source, releases, and issues
-
-This public repository is Kova's release mirror and installation surface. The canonical package is maintained with Kova's MCP contracts and tests, then published here as a reviewed snapshot without private repository history.
-
-Use immutable [GitHub Releases](https://github.com/kovatools/kova-agent-plugin/releases) for repeatable installs. To report an installation problem, client compatibility issue, or workflow bug, [open an issue](https://github.com/kovatools/kova-agent-plugin/issues) in this repository.
+Use immutable [GitHub Releases](https://github.com/kovatools/kova-agent-plugin/releases) for repeatable installs and version-specific compatibility notes. To report an installation problem, client compatibility issue, or workflow bug, [open an issue](https://github.com/kovatools/kova-agent-plugin/issues).
 
 ## License
 
