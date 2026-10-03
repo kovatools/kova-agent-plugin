@@ -1,0 +1,19 @@
+{
+  "name": "kova",
+  "owner": {
+    "name": "Kova",
+    "email": "info@kovatools.com"
+  },
+  "description": "Kova strategy and portfolio-alignment workflows for Claude.",
+  "plugins": [
+    {
+      "name": "kova",
+      "source": "./",
+      "description": "Kova strategy creation and portfolio alignment workflows for compatible AI agents.",
+      "version": "0.1.1",
+      "author": {
+        "name": "Kova"
+      }
+    }
+  ]
+}
