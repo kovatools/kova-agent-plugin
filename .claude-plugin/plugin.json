@@ -1,0 +1,22 @@
+{
+  "name": "kova",
+  "version": "0.1.1",
+  "description": "Kova strategy creation and portfolio alignment workflows for compatible AI agents.",
+  "author": {
+    "name": "Kova",
+    "email": "info@kovatools.com",
+    "url": "https://kovatools.com"
+  },
+  "homepage": "https://kovatools.com/agents",
+  "repository": "https://github.com/kovatools/kova-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "investment-strategy",
+    "portfolio-alignment",
+    "mcp",
+    "agent-skills",
+    "ai-agents",
+    "portfolio"
+  ],
+  "displayName": "Kova"
+}
