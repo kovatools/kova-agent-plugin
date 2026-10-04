@@ -1,0 +1,7193 @@
+{
+ "tools": [
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "List Strategies"
+   },
+   "description": "List all user strategies with alignment scores. Returns strategy UUIDs, names, latest alignment score/label, and last evaluation timestamp.",
+   "inputSchema": {
+    "properties": {},
+    "required": [],
+    "type": "object"
+   },
+   "name": "kova_list_strategies",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "strategies": {
+      "items": {
+       "additionalProperties": true,
+       "properties": {
+        "absolute_return_percent": {
+         "type": [
+          "number",
+          "string",
+          "null"
+         ]
+        },
+        "content_summary": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "last_evaluated_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "latest_alignment_label": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "latest_alignment_score": {
+         "type": [
+          "number",
+          "string",
+          "null"
+         ]
+        },
+        "name": {
+         "type": "string"
+        },
+        "performance_score": {
+         "type": [
+          "number",
+          "string",
+          "null"
+         ]
+        },
+        "updated_at": {
+         "type": "string"
+        },
+        "url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "uuid": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "strategies"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy"
+   },
+   "description": "Read a strategy's full content and metadata including alignment score and performance metrics.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "content": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "content",
+     "created_at",
+     "updated_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": true,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Delete Strategy"
+   },
+   "description": "Permanently delete a strategy and all associated data (emails, manual assets). Associated briefs are preserved but unlinked. This action cannot be undone.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "UUID of the strategy to delete",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_delete_strategy",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "status": {
+      "enum": [
+       "deleted"
+      ],
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "uuid"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Create Strategy"
+   },
+   "description": "Create a new investment strategy. Before calling this tool, help the user draft their strategy \u2014 it can be three lines or a detailed playbook. Good strategies include: target allocations with actual tickers (e.g. \"40% VOO, 20% QQQ, 15% IBIT\"), investment horizon and objective, action rules (e.g. \"rebalance at 5% drift, sell calls when neutral\"), and constraints (e.g. \"no single position over 15%, no leverage\"). Concrete tickers and rules produce specific dollar-based analysis; vague language produces generic commentary. After creating a strategy, use kova_create_asset and kova_create_liability to register non-ticker holdings and obligations before evaluating.",
+   "inputSchema": {
+    "properties": {
+     "content": {
+      "description": "Full strategy text",
+      "type": "string"
+     },
+     "name": {
+      "description": "Strategy name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "content"
+    ],
+    "type": "object"
+   },
+   "name": "kova_create_strategy",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "content": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "content",
+     "created_at",
+     "updated_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Save Strategy"
+   },
+   "description": "Update an existing strategy's name, content, or both. Provide at least one of name or content.",
+   "inputSchema": {
+    "properties": {
+     "content": {
+      "description": "New strategy content",
+      "type": "string"
+     },
+     "name": {
+      "description": "New strategy name",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "UUID of the strategy to update",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_save_strategy",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "content": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "content",
+     "created_at",
+     "updated_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Evaluate Portfolio"
+   },
+   "description": "Submit a portfolio for evaluation against a strategy. The portfolio param expects individual ticker holdings (stocks, options, cash) \u2014 for accounts where individual tickers aren't accessible (investment accounts, 401k, real estate), use kova_create_asset instead, then omit portfolio entirely to evaluate using only registered assets. Use kova_create_liability for persistent obligations like lines of credit or mortgages. Submitting a portfolio also updates the portfolio on file for this strategy. Returns a brief_id with status 'processing' \u2014 call kova_show_brief with that brief_id until status is 'completed' to get the full brief with alignment score, analysis, and compliance checks. Evaluation typically takes 60\u201390 seconds.",
+   "inputSchema": {
+    "properties": {
+     "context": {
+      "description": "Additional context for evaluation (market signals, reasoning, constraints)",
+      "type": "string"
+     },
+     "portfolio": {
+      "description": "Current holdings as free text, CSV, or JSON (e.g. 'AAPL 100 shares, MSFT 50 shares, $5,000 cash'). Kova normalizes the input automatically. Omit to reuse the strategy's existing portfolio data.",
+      "type": "string"
+     },
+     "portfolio_kind": {
+      "description": "Provenance of a supplied portfolio. Default unknown. Only actual observations may support Strategy Intelligence patterns.",
+      "enum": [
+       "actual",
+       "hypothetical",
+       "unknown"
+      ],
+      "type": "string"
+     },
+     "reported_at": {
+      "description": "Optional source timestamp. Omit if unknown; cannot be in the future.",
+      "format": "date-time",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID to evaluate against",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_evaluate_portfolio",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "brief_id": {
+      "type": "string"
+     },
+     "elapsed_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "expected_duration_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "message": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "poll_url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "retry_after_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "started_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "processing"
+      ],
+      "type": "string"
+     },
+     "strategy_url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "brief_id",
+     "status"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Brief"
+   },
+   "description": "Read a brief by ID. Returns status ('processing' or 'completed') and, when completed, the alignment score, label, markdown analysis, summary, and timestamps. Use 'latest' as brief_id to get the most recent brief. When status is 'processing', the response includes elapsed_seconds, expected_duration_seconds (~90s), retry_after_seconds, and a human-readable message \u2014 briefs typically complete in 60\u2013120 seconds, so wait retry_after_seconds before calling again.",
+   "inputSchema": {
+    "properties": {
+     "brief_id": {
+      "description": "Brief ID, or \"latest\" to get the most recent brief",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "brief_id"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_brief",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "alignment": {
+      "additionalProperties": true,
+      "properties": {
+       "label": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "score": {
+        "type": [
+         "number",
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [],
+      "type": "object"
+     },
+     "compliance_checks": {
+      "additionalProperties": true
+     },
+     "content": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "context_at_generation": {
+      "additionalProperties": true
+     },
+     "created_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "elapsed_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "error": {
+      "additionalProperties": true,
+      "properties": {
+       "code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "message": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [],
+      "type": "object"
+     },
+     "expected_duration_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "generated_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "id": {
+      "type": "string"
+     },
+     "live_inputs_at_generation": {
+      "additionalProperties": true
+     },
+     "message": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "retry_after_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "started_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "processing",
+       "completed",
+       "error"
+      ],
+      "type": "string"
+     },
+     "summary": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "target_allocations": {
+      "additionalProperties": true
+     },
+     "updated_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "status"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "List Briefs"
+   },
+   "description": "List all completed briefs for a strategy with ID, alignment score, and timestamps.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_list_briefs",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "briefs": {
+      "items": {
+       "additionalProperties": true,
+       "properties": {
+        "alignment": {
+         "additionalProperties": true,
+         "properties": {
+          "label": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "score": {
+           "type": [
+            "number",
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [],
+         "type": "object"
+        },
+        "created_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "generated_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "id": {
+         "type": "string"
+        },
+        "summary": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "updated_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "id"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "briefs"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "List Strategy Versions"
+   },
+   "description": "List the version history for a strategy. Each entry captures the content before it was overwritten. Returns version numbers, names, previews, and timestamps. Use this before editing a strategy to understand what has changed over time.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_list_strategy_versions",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "versions": {
+      "items": {
+       "additionalProperties": true,
+       "properties": {
+        "content_preview": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "version_number": {
+         "type": "integer"
+        }
+       },
+       "required": [
+        "version_number",
+        "name",
+        "created_at"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "versions"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Version"
+   },
+   "description": "Read the full content of a specific strategy version snapshot.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "version_number": {
+      "description": "Version number to retrieve",
+      "type": "number"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "version_number"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_version",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "content": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "version_number": {
+      "type": "integer"
+     }
+    },
+    "required": [
+     "version_number",
+     "name",
+     "content",
+     "created_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": true,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Restore Strategy Version"
+   },
+   "description": "Restore a strategy to a previous version. The current content is automatically saved as a new version before the restore, so nothing is permanently lost.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "version_number": {
+      "description": "Version number to restore",
+      "type": "number"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "version_number"
+    ],
+    "type": "object"
+   },
+   "name": "kova_restore_strategy_version",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "content": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "content",
+     "created_at",
+     "updated_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Simulate Portfolio"
+   },
+   "description": "Run an ephemeral what-if simulation \u2014 evaluates a portfolio against a strategy without saving any records. Use this to check a specific trade idea ('should I sell puts on MARA at 15?'), test a hypothetical portfolio composition, or compare scenarios before committing. Results are temporary (expire after 1 hour) and never appear in brief history. For research-heavy scenarios, enrich with market data (earnings, price action, analyst sentiment) before calling this tool and pass it via context. Optionally override the strategy text to test 'what if my strategy said X?' without modifying the stored strategy. Returns a simulation_id with status 'processing' \u2014 call kova_show_simulation with that simulation_id until status is 'completed'. Simulation typically takes 60\u2013120 seconds.",
+   "inputSchema": {
+    "properties": {
+     "context": {
+      "description": "Additional context for this simulation: trade idea, market signals, earnings data, reasoning, constraints.",
+      "type": "string"
+     },
+     "portfolio": {
+      "description": "Proposed holdings to simulate, as free text, CSV, or JSON (e.g. '60% VTI, 40% BND' or 'AAPL 100 shares, $5,000 cash'). Kova normalizes the input automatically.",
+      "type": "string"
+     },
+     "strategy_content": {
+      "description": "Override the strategy text for this simulation only. Use to test 'what if my strategy said X?' without modifying the stored strategy.",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID to evaluate against",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "portfolio"
+    ],
+    "type": "object"
+   },
+   "name": "kova_simulate_portfolio",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "elapsed_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "expected_duration_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "message": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "retry_after_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "simulation_id": {
+      "type": "string"
+     },
+     "started_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "processing"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "simulation_id",
+     "status"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Simulation"
+   },
+   "description": "Read a simulation result by ID. Returns status ('processing' or 'completed') and, when completed, the alignment score, analysis, and summary. Simulations expire after 1 hour. When status is 'processing', the response includes elapsed_seconds, expected_duration_seconds (~120s), retry_after_seconds, and a human-readable message \u2014 simulations typically complete in 80\u2013160 seconds, so wait retry_after_seconds before calling again.",
+   "inputSchema": {
+    "properties": {
+     "simulation_id": {
+      "description": "Simulation ID returned by kova_simulate_portfolio",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "simulation_id"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_simulation",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "alignment": {
+      "additionalProperties": true,
+      "properties": {
+       "label": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "score": {
+        "type": [
+         "number",
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [],
+      "type": "object"
+     },
+     "compliance_checks": {
+      "additionalProperties": true
+     },
+     "content": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "elapsed_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "error": {
+      "additionalProperties": true,
+      "properties": {
+       "code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "message": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [],
+      "type": "object"
+     },
+     "expected_duration_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "generated_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "id": {
+      "type": "string"
+     },
+     "message": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "retry_after_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "started_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "processing",
+       "completed",
+       "failed",
+       "error"
+      ],
+      "type": "string"
+     },
+     "summary": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "target_allocations": {
+      "additionalProperties": true
+     }
+    },
+    "required": [
+     "id",
+     "status"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Portfolio"
+   },
+   "description": "Read the current portfolio on file for a strategy \u2014 the most recent holdings (stocks, options, cash, assets, and liabilities) with performance metrics. Persisted manual assets and liabilities include uuid values so agents can update or remove existing records without creating duplicates.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_portfolio",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "cash_flows_summary": {
+      "additionalProperties": true,
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "evaluated_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "holdings": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "metrics": {
+      "additionalProperties": true,
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "snapshot_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "holdings"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Create Asset"
+   },
+   "description": "Register a non-ticker asset on a strategy \u2014 anything owned and tracked by total value rather than individual ticker symbols. Use this for managed accounts where tickers aren't accessible: robo-advisors, 401k plans, real estate, or other lump-sum holdings. Once registered, the asset is part of the strategy's portfolio and is included in every evaluation. Types: investment_account, real_estate, bitcoin, other. Bitcoin uses live pricing \u2014 omit current_value and provide quantity instead. After registering assets, call kova_evaluate_portfolio without a portfolio param to generate a brief.",
+   "inputSchema": {
+    "properties": {
+     "current_value": {
+      "description": "Total current value in USD. Required for all types except bitcoin (which uses live pricing \u2014 omit current_value and provide quantity instead).",
+      "type": "number"
+     },
+     "name": {
+      "description": "Asset name. E.g. 'My 401k', 'Brokerage Account', 'Primary Residence'",
+      "type": "string"
+     },
+     "notes": {
+      "description": "Optional notes about the asset (e.g. 'US stocks + bonds, auto-rebalanced')",
+      "type": "string"
+     },
+     "quantity": {
+      "description": "Units held. Required for bitcoin (e.g. 0.5 BTC); defaults to 1 for all other types.",
+      "type": "number"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "type": {
+      "description": "Asset type: 'investment_account' (robo-advisor, 401k, brokerage), 'real_estate', 'bitcoin', or 'other'",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "name"
+    ],
+    "type": "object"
+   },
+   "name": "kova_create_asset",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "current_value": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "name": {
+      "type": "string"
+     },
+     "notes": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "quantity": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "type",
+     "current_value"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Update Asset"
+   },
+   "description": "Update a non-ticker asset on a strategy. Merge semantics \u2014 only supplied fields change. Provide at least one field to update.",
+   "inputSchema": {
+    "properties": {
+     "asset_uuid": {
+      "description": "Asset UUID to update (returned by kova_create_asset or by kova_show_portfolio for existing manual assets)",
+      "type": "string"
+     },
+     "current_value": {
+      "description": "New total current value in USD",
+      "type": "number"
+     },
+     "name": {
+      "description": "New asset name",
+      "type": "string"
+     },
+     "notes": {
+      "description": "New notes about the asset",
+      "type": "string"
+     },
+     "quantity": {
+      "description": "New units held",
+      "type": "number"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "type": {
+      "description": "Asset type: 'investment_account', 'real_estate', 'bitcoin', or 'other'",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "asset_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_update_asset",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "current_value": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "name": {
+      "type": "string"
+     },
+     "notes": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "quantity": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "type",
+     "current_value"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": true,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Remove Asset"
+   },
+   "description": "Remove a non-ticker asset from a strategy. The asset UUID is returned by kova_create_asset or by kova_show_portfolio for existing manual assets.",
+   "inputSchema": {
+    "properties": {
+     "asset_uuid": {
+      "description": "Asset UUID to remove",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "asset_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_remove_asset",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "status": {
+      "enum": [
+       "deleted"
+      ],
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "uuid"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Create Liability"
+   },
+   "description": "Register a non-portfolio liability on a strategy. Use this for persistent obligations like a line of credit, mortgage, personal loan, or other debt that should be visible during evaluation. Liabilities are included as structured context in every evaluation but do not change portfolio value math in this iteration.",
+   "inputSchema": {
+    "properties": {
+     "currency": {
+      "description": "Optional ISO currency code. Defaults to USD.",
+      "type": "string"
+     },
+     "current_balance": {
+      "description": "Current balance in USD.",
+      "type": "number"
+     },
+     "name": {
+      "description": "Liability name. E.g. 'Wealthfront Portfolio LOC', 'Primary Mortgage'",
+      "type": "string"
+     },
+     "notes": {
+      "description": "Optional notes about the liability (e.g. 'secured by taxable portfolio')",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "type": {
+      "description": "Liability type: 'line_of_credit', 'mortgage', 'loan', or 'other'",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "name",
+     "type",
+     "current_balance"
+    ],
+    "type": "object"
+   },
+   "name": "kova_create_liability",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "current_balance": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "name": {
+      "type": "string"
+     },
+     "notes": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "type",
+     "current_balance"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Update Liability"
+   },
+   "description": "Update a liability on a strategy. Merge semantics \u2014 only supplied fields change. Provide at least one field to update.",
+   "inputSchema": {
+    "properties": {
+     "currency": {
+      "description": "Optional ISO currency code",
+      "type": "string"
+     },
+     "current_balance": {
+      "description": "New current balance in USD",
+      "type": "number"
+     },
+     "liability_uuid": {
+      "description": "Liability UUID to update (returned by kova_create_liability or by kova_show_portfolio for existing liabilities)",
+      "type": "string"
+     },
+     "name": {
+      "description": "New liability name",
+      "type": "string"
+     },
+     "notes": {
+      "description": "New notes about the liability",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     },
+     "type": {
+      "description": "Liability type: 'line_of_credit', 'mortgage', 'loan', or 'other'",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "liability_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_update_liability",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "current_balance": {
+      "type": [
+       "number",
+       "string",
+       "null"
+      ]
+     },
+     "name": {
+      "type": "string"
+     },
+     "notes": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "name",
+     "type",
+     "current_balance"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": true,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Remove Liability"
+   },
+   "description": "Remove a liability from a strategy. The liability UUID is returned by kova_create_liability or by kova_show_portfolio for existing liabilities.",
+   "inputSchema": {
+    "properties": {
+     "liability_uuid": {
+      "description": "Liability UUID to remove",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "liability_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_remove_liability",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "status": {
+      "enum": [
+       "deleted"
+      ],
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "uuid"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Record Cash Flow"
+   },
+   "description": "Record a deposit or withdrawal on a strategy's portfolio. Cash flows adjust performance calculations \u2014 deposits don't count as gains, withdrawals don't count as losses. Use this to track contributions, distributions, or transfers that affect the portfolio's value but aren't investment returns.",
+   "inputSchema": {
+    "properties": {
+     "amount": {
+      "description": "Positive dollar amount of the cash flow",
+      "type": "number"
+     },
+     "flow_type": {
+      "description": "Type of cash flow: 'deposit' (money added) or 'withdrawal' (money removed)",
+      "enum": [
+       "deposit",
+       "withdrawal"
+      ],
+      "type": "string"
+     },
+     "notes": {
+      "description": "Optional note (e.g. 'Monthly 401k contribution', 'Emergency withdrawal')",
+      "type": "string"
+     },
+     "occurred_on": {
+      "description": "Date the cash flow occurred (ISO 8601, e.g. '2026-05-01'). Defaults to today.",
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "flow_type",
+     "amount"
+    ],
+    "type": "object"
+   },
+   "name": "kova_record_cash_flow",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "amount": {
+      "type": "number"
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "flow_type": {
+      "enum": [
+       "deposit",
+       "withdrawal"
+      ],
+      "type": "string"
+     },
+     "id": {
+      "type": "integer"
+     },
+     "notes": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "occurred_on": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "signed_amount": {
+      "type": "number"
+     }
+    },
+    "required": [
+     "id",
+     "flow_type",
+     "amount",
+     "signed_amount",
+     "created_at"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "List Cash Flows"
+   },
+   "description": "List all recorded cash flows (deposits and withdrawals) for a strategy's portfolio. Returns flows ordered by date, most recent first.",
+   "inputSchema": {
+    "properties": {
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_list_cash_flows",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "cash_flows": {
+      "items": {
+       "additionalProperties": true,
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "flow_type": {
+         "enum": [
+          "deposit",
+          "withdrawal"
+         ],
+         "type": "string"
+        },
+        "id": {
+         "type": "integer"
+        },
+        "notes": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "occurred_on": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "signed_amount": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "id",
+        "flow_type",
+        "amount",
+        "signed_amount",
+        "created_at"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "cash_flows"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": true,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Remove Cash Flow"
+   },
+   "description": "Remove a cash flow record from a strategy's portfolio. Use kova_list_cash_flows to find the cash_flow_id.",
+   "inputSchema": {
+    "properties": {
+     "cash_flow_id": {
+      "description": "Cash flow ID to remove (returned by kova_record_cash_flow or kova_list_cash_flows)",
+      "type": "number"
+     },
+     "strategy_uuid": {
+      "description": "Strategy UUID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "cash_flow_id"
+    ],
+    "type": "object"
+   },
+   "name": "kova_remove_cash_flow",
+   "outputSchema": {
+    "additionalProperties": true,
+    "properties": {
+     "id": {
+      "type": "integer"
+     },
+     "status": {
+      "enum": [
+       "deleted"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "id"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Intelligence"
+   },
+   "description": "Read strategy understanding, processing state, and the primary question. Read-only; never starts work.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_intelligence",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "assessment": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "attempts": {
+          "type": "integer"
+         },
+         "completed_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "status": {
+          "enum": [
+           "queued",
+           "running",
+           "completed",
+           "failed",
+           "superseded"
+          ],
+          "type": "string"
+         },
+         "strategy_revision": {
+          "type": "integer"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "status",
+         "strategy_revision",
+         "created_at",
+         "completed_at",
+         "error_code",
+         "attempts"
+        ],
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "current": {
+      "type": "boolean"
+     },
+     "eligible_observation_count": {
+      "type": "integer"
+     },
+     "enabled": {
+      "type": "boolean"
+     },
+     "open_question_count": {
+      "type": "integer"
+     },
+     "primary_advisory": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "details": {
+          "additionalProperties": false,
+          "properties": {
+           "last_response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "needs_strategy_revision": {
+            "type": "boolean"
+           },
+           "observation": {
+            "type": "string"
+           },
+           "question": {
+            "type": "string"
+           },
+           "quote": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "relevance": {
+            "type": "string"
+           },
+           "reopening_reason": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "resolution": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_interpretation": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_pending": {
+            "type": "boolean"
+           },
+           "response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "title": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "title",
+           "observation",
+           "relevance",
+           "question"
+          ],
+          "type": "object"
+         },
+         "evidence": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "brief_available": {
+             "type": "boolean"
+            },
+            "captured_at": {
+             "type": "string"
+            },
+            "facts": {
+             "additionalProperties": false,
+             "properties": {
+              "cash_percent": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "cash_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "date_basis": {
+               "type": "string"
+              },
+              "limitations": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "portfolio_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "positions": {
+               "items": {
+                "additionalProperties": false,
+                "properties": {
+                 "name": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 },
+                 "percent": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "quantity": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 }
+                },
+                "required": [
+                 "name",
+                 "quantity",
+                 "value",
+                 "percent"
+                ],
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "received_at": {
+               "type": "string"
+              },
+              "reported_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "scope": {
+               "type": "string"
+              },
+              "valuation_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "cash_value",
+              "portfolio_value",
+              "cash_percent",
+              "positions",
+              "received_at",
+              "reported_at",
+              "valuation_at",
+              "date_basis",
+              "limitations",
+              "scope"
+             ],
+             "type": "object"
+            },
+            "observed_at": {
+             "type": "string"
+            },
+            "portfolio_kind": {
+             "type": "string"
+            },
+            "source_available": {
+             "type": "boolean"
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "observed_at",
+            "captured_at",
+            "portfolio_kind",
+            "facts",
+            "source_available",
+            "brief_available"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "kind": {
+          "type": "string"
+         },
+         "revision": {
+          "type": "integer"
+         },
+         "status": {
+          "type": "string"
+         },
+         "strategy_current": {
+          "type": "boolean"
+         },
+         "topic_key": {
+          "type": "string"
+         },
+         "updated_at": {
+          "type": "string"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "topic_key",
+         "kind",
+         "status",
+         "revision",
+         "strategy_current",
+         "details",
+         "updated_at",
+         "evidence"
+        ],
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "strategy_uuid": {
+      "type": "string"
+     },
+     "understanding": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "declared": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "quote": {
+             "type": "string"
+            },
+            "response_uuid": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "text",
+            "quote",
+            "response_uuid"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "interpreted": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "quote": {
+             "type": "string"
+            },
+            "response_uuid": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "text",
+            "quote",
+            "response_uuid"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "unresolved": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "quote": {
+             "type": "string"
+            },
+            "response_uuid": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "text",
+            "quote",
+            "response_uuid"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         }
+        },
+        "required": [
+         "declared",
+         "interpreted",
+         "unresolved"
+        ],
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "understood_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "enabled",
+     "assessment",
+     "understanding",
+     "understood_at",
+     "current",
+     "eligible_observation_count",
+     "primary_advisory",
+     "open_question_count"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Assess Strategy"
+   },
+   "description": "Request or retry an asynchronous Strategy Intelligence check. Does not change strategy text or briefs. Equivalent in-progress or completed requests reuse existing work.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_assess_strategy",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "attempts": {
+      "type": "integer"
+     },
+     "completed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "error_code": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "queued",
+       "running",
+       "completed",
+       "failed",
+       "superseded"
+      ],
+      "type": "string"
+     },
+     "strategy_revision": {
+      "type": "integer"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "status",
+     "strategy_revision",
+     "created_at",
+     "completed_at",
+     "error_code",
+     "attempts"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "List Strategy Advisories"
+   },
+   "description": "Read strategy questions and history, newest first, 25 per page. Pass next_cursor as before.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "before": {
+      "type": "string"
+     },
+     "status": {
+      "enum": [
+       "open",
+       "resolved",
+       "dismissed",
+       "superseded"
+      ],
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_list_strategy_advisories",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "advisories": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "details": {
+         "additionalProperties": false,
+         "properties": {
+          "last_response_uuid": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "needs_strategy_revision": {
+           "type": "boolean"
+          },
+          "observation": {
+           "type": "string"
+          },
+          "question": {
+           "type": "string"
+          },
+          "quote": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "relevance": {
+           "type": "string"
+          },
+          "reopening_reason": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "resolution": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "response_interpretation": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "response_pending": {
+           "type": "boolean"
+          },
+          "response_uuid": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "title": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "title",
+          "observation",
+          "relevance",
+          "question"
+         ],
+         "type": "object"
+        },
+        "evidence": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "brief_available": {
+            "type": "boolean"
+           },
+           "captured_at": {
+            "type": "string"
+           },
+           "facts": {
+            "additionalProperties": false,
+            "properties": {
+             "cash_percent": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "cash_value": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "date_basis": {
+              "type": "string"
+             },
+             "limitations": {
+              "items": {
+               "type": "string"
+              },
+              "type": "array"
+             },
+             "portfolio_value": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "positions": {
+              "items": {
+               "additionalProperties": false,
+               "properties": {
+                "name": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "percent": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "quantity": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "value": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                }
+               },
+               "required": [
+                "name",
+                "quantity",
+                "value",
+                "percent"
+               ],
+               "type": "object"
+              },
+              "type": "array"
+             },
+             "received_at": {
+              "type": "string"
+             },
+             "reported_at": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "scope": {
+              "type": "string"
+             },
+             "valuation_at": {
+              "type": [
+               "string",
+               "null"
+              ]
+             }
+            },
+            "required": [
+             "cash_value",
+             "portfolio_value",
+             "cash_percent",
+             "positions",
+             "received_at",
+             "reported_at",
+             "valuation_at",
+             "date_basis",
+             "limitations",
+             "scope"
+            ],
+            "type": "object"
+           },
+           "observed_at": {
+            "type": "string"
+           },
+           "portfolio_kind": {
+            "type": "string"
+           },
+           "source_available": {
+            "type": "boolean"
+           },
+           "uuid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "observed_at",
+           "captured_at",
+           "portfolio_kind",
+           "facts",
+           "source_available",
+           "brief_available"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "revision": {
+         "type": "integer"
+        },
+        "status": {
+         "type": "string"
+        },
+        "strategy_current": {
+         "type": "boolean"
+        },
+        "topic_key": {
+         "type": "string"
+        },
+        "updated_at": {
+         "type": "string"
+        },
+        "uuid": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "uuid",
+        "topic_key",
+        "kind",
+        "status",
+        "revision",
+        "strategy_current",
+        "details",
+        "updated_at",
+        "evidence"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "next_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "advisories",
+     "next_cursor"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Advisory"
+   },
+   "description": "Read a question, its dated evidence, and up to 50 saved responses. Pass next_response_cursor as response_cursor for older responses.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "advisory_uuid": {
+      "type": "string"
+     },
+     "response_cursor": {
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "advisory_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_advisory",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "details": {
+      "additionalProperties": false,
+      "properties": {
+       "last_response_uuid": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "needs_strategy_revision": {
+        "type": "boolean"
+       },
+       "observation": {
+        "type": "string"
+       },
+       "question": {
+        "type": "string"
+       },
+       "quote": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "relevance": {
+        "type": "string"
+       },
+       "reopening_reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "resolution": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "response_interpretation": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "response_pending": {
+        "type": "boolean"
+       },
+       "response_uuid": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "title": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "title",
+       "observation",
+       "relevance",
+       "question"
+      ],
+      "type": "object"
+     },
+     "evidence": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "brief_available": {
+         "type": "boolean"
+        },
+        "captured_at": {
+         "type": "string"
+        },
+        "facts": {
+         "additionalProperties": false,
+         "properties": {
+          "cash_percent": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "cash_value": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "date_basis": {
+           "type": "string"
+          },
+          "limitations": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "portfolio_value": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "positions": {
+           "items": {
+            "additionalProperties": false,
+            "properties": {
+             "name": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "percent": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "quantity": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "value": {
+              "type": [
+               "number",
+               "null"
+              ]
+             }
+            },
+            "required": [
+             "name",
+             "quantity",
+             "value",
+             "percent"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "received_at": {
+           "type": "string"
+          },
+          "reported_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "scope": {
+           "type": "string"
+          },
+          "valuation_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "cash_value",
+          "portfolio_value",
+          "cash_percent",
+          "positions",
+          "received_at",
+          "reported_at",
+          "valuation_at",
+          "date_basis",
+          "limitations",
+          "scope"
+         ],
+         "type": "object"
+        },
+        "observed_at": {
+         "type": "string"
+        },
+        "portfolio_kind": {
+         "type": "string"
+        },
+        "source_available": {
+         "type": "boolean"
+        },
+        "uuid": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "uuid",
+        "observed_at",
+        "captured_at",
+        "portfolio_kind",
+        "facts",
+        "source_available",
+        "brief_available"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "next_response_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "responses": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "action": {
+         "type": "string"
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "source": {
+         "type": "string"
+        },
+        "text": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "uuid": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "uuid",
+        "action",
+        "text",
+        "source",
+        "created_at"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "revision": {
+      "type": "integer"
+     },
+     "status": {
+      "type": "string"
+     },
+     "strategy_current": {
+      "type": "boolean"
+     },
+     "topic_key": {
+      "type": "string"
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "topic_key",
+     "kind",
+     "status",
+     "revision",
+     "strategy_current",
+     "details",
+     "updated_at",
+     "evidence",
+     "responses",
+     "next_response_cursor"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": false,
+    "title": "Respond To Strategy Advisory"
+   },
+   "description": "Save a user-provided explanation or question action. Relay the user's words; never invent motives or answers. Read the revision first. Supply a unique request_id and reuse it only for an exact retry. Replies and corrections require text and queue interpretation. Strategy content and briefs are unchanged.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "advisory_uuid": {
+      "type": "string"
+     },
+     "request_id": {
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "type": "string"
+     },
+     "response_action": {
+      "enum": [
+       "reply",
+       "correct",
+       "dismiss",
+       "keep_unresolved",
+       "reopen"
+      ],
+      "type": "string"
+     },
+     "revision": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     },
+     "text": {
+      "maxLength": 8000,
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "advisory_uuid",
+     "response_action",
+     "request_id",
+     "revision"
+    ],
+    "type": "object"
+   },
+   "name": "kova_respond_to_strategy_advisory",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "advisory": {
+      "additionalProperties": false,
+      "properties": {
+       "details": {
+        "additionalProperties": false,
+        "properties": {
+         "last_response_uuid": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "needs_strategy_revision": {
+          "type": "boolean"
+         },
+         "observation": {
+          "type": "string"
+         },
+         "question": {
+          "type": "string"
+         },
+         "quote": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "relevance": {
+          "type": "string"
+         },
+         "reopening_reason": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "resolution": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "response_interpretation": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "response_pending": {
+          "type": "boolean"
+         },
+         "response_uuid": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "title": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "title",
+         "observation",
+         "relevance",
+         "question"
+        ],
+        "type": "object"
+       },
+       "evidence": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "brief_available": {
+           "type": "boolean"
+          },
+          "captured_at": {
+           "type": "string"
+          },
+          "facts": {
+           "additionalProperties": false,
+           "properties": {
+            "cash_percent": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "cash_value": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "date_basis": {
+             "type": "string"
+            },
+            "limitations": {
+             "items": {
+              "type": "string"
+             },
+             "type": "array"
+            },
+            "portfolio_value": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "positions": {
+             "items": {
+              "additionalProperties": false,
+              "properties": {
+               "name": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "percent": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "quantity": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "value": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               }
+              },
+              "required": [
+               "name",
+               "quantity",
+               "value",
+               "percent"
+              ],
+              "type": "object"
+             },
+             "type": "array"
+            },
+            "received_at": {
+             "type": "string"
+            },
+            "reported_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "scope": {
+             "type": "string"
+            },
+            "valuation_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           },
+           "required": [
+            "cash_value",
+            "portfolio_value",
+            "cash_percent",
+            "positions",
+            "received_at",
+            "reported_at",
+            "valuation_at",
+            "date_basis",
+            "limitations",
+            "scope"
+           ],
+           "type": "object"
+          },
+          "observed_at": {
+           "type": "string"
+          },
+          "portfolio_kind": {
+           "type": "string"
+          },
+          "source_available": {
+           "type": "boolean"
+          },
+          "uuid": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "uuid",
+          "observed_at",
+          "captured_at",
+          "portfolio_kind",
+          "facts",
+          "source_available",
+          "brief_available"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "kind": {
+        "type": "string"
+       },
+       "next_response_cursor": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "responses": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "action": {
+           "type": "string"
+          },
+          "created_at": {
+           "type": "string"
+          },
+          "source": {
+           "type": "string"
+          },
+          "text": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "uuid": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "uuid",
+          "action",
+          "text",
+          "source",
+          "created_at"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "revision": {
+        "type": "integer"
+       },
+       "status": {
+        "type": "string"
+       },
+       "strategy_current": {
+        "type": "boolean"
+       },
+       "topic_key": {
+        "type": "string"
+       },
+       "updated_at": {
+        "type": "string"
+       },
+       "uuid": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "uuid",
+       "topic_key",
+       "kind",
+       "status",
+       "revision",
+       "strategy_current",
+       "details",
+       "updated_at",
+       "evidence",
+       "responses",
+       "next_response_cursor"
+      ],
+      "type": "object"
+     },
+     "intelligence": {
+      "additionalProperties": false,
+      "properties": {
+       "assessment": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "attempts": {
+            "type": "integer"
+           },
+           "completed_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "created_at": {
+            "type": "string"
+           },
+           "error_code": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "status": {
+            "enum": [
+             "queued",
+             "running",
+             "completed",
+             "failed",
+             "superseded"
+            ],
+            "type": "string"
+           },
+           "strategy_revision": {
+            "type": "integer"
+           },
+           "uuid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "status",
+           "strategy_revision",
+           "created_at",
+           "completed_at",
+           "error_code",
+           "attempts"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "current": {
+        "type": "boolean"
+       },
+       "eligible_observation_count": {
+        "type": "integer"
+       },
+       "enabled": {
+        "type": "boolean"
+       },
+       "open_question_count": {
+        "type": "integer"
+       },
+       "primary_advisory": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "details": {
+            "additionalProperties": false,
+            "properties": {
+             "last_response_uuid": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "needs_strategy_revision": {
+              "type": "boolean"
+             },
+             "observation": {
+              "type": "string"
+             },
+             "question": {
+              "type": "string"
+             },
+             "quote": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "relevance": {
+              "type": "string"
+             },
+             "reopening_reason": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "resolution": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "response_interpretation": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "response_pending": {
+              "type": "boolean"
+             },
+             "response_uuid": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "title": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "title",
+             "observation",
+             "relevance",
+             "question"
+            ],
+            "type": "object"
+           },
+           "evidence": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "brief_available": {
+               "type": "boolean"
+              },
+              "captured_at": {
+               "type": "string"
+              },
+              "facts": {
+               "additionalProperties": false,
+               "properties": {
+                "cash_percent": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "cash_value": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "date_basis": {
+                 "type": "string"
+                },
+                "limitations": {
+                 "items": {
+                  "type": "string"
+                 },
+                 "type": "array"
+                },
+                "portfolio_value": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "positions": {
+                 "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                   "name": {
+                    "type": [
+                     "string",
+                     "null"
+                    ]
+                   },
+                   "percent": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   },
+                   "quantity": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   },
+                   "value": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   }
+                  },
+                  "required": [
+                   "name",
+                   "quantity",
+                   "value",
+                   "percent"
+                  ],
+                  "type": "object"
+                 },
+                 "type": "array"
+                },
+                "received_at": {
+                 "type": "string"
+                },
+                "reported_at": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "scope": {
+                 "type": "string"
+                },
+                "valuation_at": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                }
+               },
+               "required": [
+                "cash_value",
+                "portfolio_value",
+                "cash_percent",
+                "positions",
+                "received_at",
+                "reported_at",
+                "valuation_at",
+                "date_basis",
+                "limitations",
+                "scope"
+               ],
+               "type": "object"
+              },
+              "observed_at": {
+               "type": "string"
+              },
+              "portfolio_kind": {
+               "type": "string"
+              },
+              "source_available": {
+               "type": "boolean"
+              },
+              "uuid": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "uuid",
+              "observed_at",
+              "captured_at",
+              "portfolio_kind",
+              "facts",
+              "source_available",
+              "brief_available"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "kind": {
+            "type": "string"
+           },
+           "revision": {
+            "type": "integer"
+           },
+           "status": {
+            "type": "string"
+           },
+           "strategy_current": {
+            "type": "boolean"
+           },
+           "topic_key": {
+            "type": "string"
+           },
+           "updated_at": {
+            "type": "string"
+           },
+           "uuid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "topic_key",
+           "kind",
+           "status",
+           "revision",
+           "strategy_current",
+           "details",
+           "updated_at",
+           "evidence"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "strategy_uuid": {
+        "type": "string"
+       },
+       "understanding": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "declared": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "interpreted": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "unresolved": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           }
+          },
+          "required": [
+           "declared",
+           "interpreted",
+           "unresolved"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "understood_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "strategy_uuid",
+       "enabled",
+       "assessment",
+       "understanding",
+       "understood_at",
+       "current",
+       "eligible_observation_count",
+       "primary_advisory",
+       "open_question_count"
+      ],
+      "type": "object"
+     },
+     "response": {
+      "additionalProperties": false,
+      "properties": {
+       "action": {
+        "type": "string"
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "source": {
+        "type": "string"
+       },
+       "text": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "uuid": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "uuid",
+       "action",
+       "text",
+       "source",
+       "created_at"
+      ],
+      "type": "object"
+     }
+    },
+    "required": [
+     "response",
+     "advisory",
+     "intelligence"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Intelligence Explorer"
+   },
+   "description": "Privately inspect Strategy Intelligence show data. Restricted to the allowed account and its own strategies. Read-only; never starts checks. Exact call content expires after one year; missing history is explicitly unavailable.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "before": {
+      "type": "string"
+     },
+     "memory_before": {
+      "type": "string"
+     },
+     "memory_kind": {
+      "enum": [
+       "evidence",
+       "question",
+       "response"
+      ],
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_intelligence_explorer",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "assessments": {
+      "additionalProperties": false,
+      "properties": {
+       "items": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "attempts": {
+           "type": "integer"
+          },
+          "call_count": {
+           "type": "integer"
+          },
+          "capture_gap_count": {
+           "type": "integer"
+          },
+          "capture_status": {
+           "type": "string"
+          },
+          "completed_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "created_at": {
+           "type": "string"
+          },
+          "engine_version": {
+           "type": "string"
+          },
+          "error_code": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "started_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "status": {
+           "enum": [
+            "queued",
+            "running",
+            "completed",
+            "failed",
+            "superseded"
+           ],
+           "type": "string"
+          },
+          "strategy_digest": {
+           "type": "string"
+          },
+          "strategy_revision": {
+           "type": "integer"
+          },
+          "trigger": {
+           "type": "string"
+          },
+          "uuid": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "uuid",
+          "status",
+          "strategy_revision",
+          "created_at",
+          "completed_at",
+          "error_code",
+          "attempts",
+          "trigger",
+          "started_at",
+          "engine_version",
+          "strategy_digest",
+          "call_count",
+          "capture_status",
+          "capture_gap_count"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "next_cursor": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "items",
+       "next_cursor"
+      ],
+      "type": "object"
+     },
+     "intelligence": {
+      "additionalProperties": false,
+      "properties": {
+       "assessment": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "attempts": {
+            "type": "integer"
+           },
+           "completed_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "created_at": {
+            "type": "string"
+           },
+           "error_code": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "status": {
+            "enum": [
+             "queued",
+             "running",
+             "completed",
+             "failed",
+             "superseded"
+            ],
+            "type": "string"
+           },
+           "strategy_revision": {
+            "type": "integer"
+           },
+           "uuid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "status",
+           "strategy_revision",
+           "created_at",
+           "completed_at",
+           "error_code",
+           "attempts"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "current": {
+        "type": "boolean"
+       },
+       "eligible_observation_count": {
+        "type": "integer"
+       },
+       "enabled": {
+        "type": "boolean"
+       },
+       "open_question_count": {
+        "type": "integer"
+       },
+       "primary_advisory": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "details": {
+            "additionalProperties": false,
+            "properties": {
+             "last_response_uuid": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "needs_strategy_revision": {
+              "type": "boolean"
+             },
+             "observation": {
+              "type": "string"
+             },
+             "question": {
+              "type": "string"
+             },
+             "quote": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "relevance": {
+              "type": "string"
+             },
+             "reopening_reason": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "resolution": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "response_interpretation": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "response_pending": {
+              "type": "boolean"
+             },
+             "response_uuid": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "title": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "title",
+             "observation",
+             "relevance",
+             "question"
+            ],
+            "type": "object"
+           },
+           "evidence": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "brief_available": {
+               "type": "boolean"
+              },
+              "captured_at": {
+               "type": "string"
+              },
+              "facts": {
+               "additionalProperties": false,
+               "properties": {
+                "cash_percent": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "cash_value": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "date_basis": {
+                 "type": "string"
+                },
+                "limitations": {
+                 "items": {
+                  "type": "string"
+                 },
+                 "type": "array"
+                },
+                "portfolio_value": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "positions": {
+                 "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                   "name": {
+                    "type": [
+                     "string",
+                     "null"
+                    ]
+                   },
+                   "percent": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   },
+                   "quantity": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   },
+                   "value": {
+                    "type": [
+                     "number",
+                     "null"
+                    ]
+                   }
+                  },
+                  "required": [
+                   "name",
+                   "quantity",
+                   "value",
+                   "percent"
+                  ],
+                  "type": "object"
+                 },
+                 "type": "array"
+                },
+                "received_at": {
+                 "type": "string"
+                },
+                "reported_at": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "scope": {
+                 "type": "string"
+                },
+                "valuation_at": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                }
+               },
+               "required": [
+                "cash_value",
+                "portfolio_value",
+                "cash_percent",
+                "positions",
+                "received_at",
+                "reported_at",
+                "valuation_at",
+                "date_basis",
+                "limitations",
+                "scope"
+               ],
+               "type": "object"
+              },
+              "observed_at": {
+               "type": "string"
+              },
+              "portfolio_kind": {
+               "type": "string"
+              },
+              "source_available": {
+               "type": "boolean"
+              },
+              "uuid": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "uuid",
+              "observed_at",
+              "captured_at",
+              "portfolio_kind",
+              "facts",
+              "source_available",
+              "brief_available"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "kind": {
+            "type": "string"
+           },
+           "revision": {
+            "type": "integer"
+           },
+           "status": {
+            "type": "string"
+           },
+           "strategy_current": {
+            "type": "boolean"
+           },
+           "topic_key": {
+            "type": "string"
+           },
+           "updated_at": {
+            "type": "string"
+           },
+           "uuid": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "topic_key",
+           "kind",
+           "status",
+           "revision",
+           "strategy_current",
+           "details",
+           "updated_at",
+           "evidence"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "strategy_uuid": {
+        "type": "string"
+       },
+       "understanding": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "declared": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "interpreted": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "unresolved": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "quote": {
+               "type": "string"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "text",
+              "quote",
+              "response_uuid"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           }
+          },
+          "required": [
+           "declared",
+           "interpreted",
+           "unresolved"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "understood_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "strategy_uuid",
+       "enabled",
+       "assessment",
+       "understanding",
+       "understood_at",
+       "current",
+       "eligible_observation_count",
+       "primary_advisory",
+       "open_question_count"
+      ],
+      "type": "object"
+     },
+     "limits": {
+      "additionalProperties": false,
+      "properties": {
+       "capture_retention_years": {
+        "type": "integer"
+       },
+       "history_days": {
+        "type": "integer"
+       },
+       "history_limit": {
+        "type": "integer"
+       },
+       "other_topics": {
+        "type": "integer"
+       },
+       "pattern_minimum": {
+        "type": "integer"
+       },
+       "pending_topics": {
+        "type": "integer"
+       },
+       "responses_per_topic": {
+        "type": "integer"
+       },
+       "retained_evidence_per_topic": {
+        "type": "integer"
+       }
+      },
+      "required": [
+       "history_days",
+       "history_limit",
+       "pattern_minimum",
+       "pending_topics",
+       "other_topics",
+       "responses_per_topic",
+       "retained_evidence_per_topic",
+       "capture_retention_years"
+      ],
+      "type": "object"
+     },
+     "memories": {
+      "additionalProperties": false,
+      "properties": {
+       "items": {
+        "items": {
+         "anyOf": [
+          {
+           "additionalProperties": false,
+           "properties": {
+            "brief_available": {
+             "type": "boolean"
+            },
+            "captured_at": {
+             "type": "string"
+            },
+            "facts": {
+             "additionalProperties": false,
+             "properties": {
+              "cash_percent": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "cash_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "date_basis": {
+               "type": "string"
+              },
+              "limitations": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "portfolio_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "positions": {
+               "items": {
+                "additionalProperties": false,
+                "properties": {
+                 "name": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 },
+                 "percent": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "quantity": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 }
+                },
+                "required": [
+                 "name",
+                 "quantity",
+                 "value",
+                 "percent"
+                ],
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "received_at": {
+               "type": "string"
+              },
+              "reported_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "scope": {
+               "type": "string"
+              },
+              "valuation_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "cash_value",
+              "portfolio_value",
+              "cash_percent",
+              "positions",
+              "received_at",
+              "reported_at",
+              "valuation_at",
+              "date_basis",
+              "limitations",
+              "scope"
+             ],
+             "type": "object"
+            },
+            "observed_at": {
+             "type": "string"
+            },
+            "portfolio_kind": {
+             "type": "string"
+            },
+            "source_available": {
+             "type": "boolean"
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "observed_at",
+            "captured_at",
+            "portfolio_kind",
+            "facts",
+            "source_available",
+            "brief_available"
+           ],
+           "type": "object"
+          },
+          {
+           "additionalProperties": false,
+           "properties": {
+            "details": {
+             "additionalProperties": false,
+             "properties": {
+              "last_response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "needs_strategy_revision": {
+               "type": "boolean"
+              },
+              "observation": {
+               "type": "string"
+              },
+              "question": {
+               "type": "string"
+              },
+              "quote": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "relevance": {
+               "type": "string"
+              },
+              "reopening_reason": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "resolution": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "response_interpretation": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "response_pending": {
+               "type": "boolean"
+              },
+              "response_uuid": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "title": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "title",
+              "observation",
+              "relevance",
+              "question"
+             ],
+             "type": "object"
+            },
+            "evidence": {
+             "items": {
+              "additionalProperties": false,
+              "properties": {
+               "brief_available": {
+                "type": "boolean"
+               },
+               "captured_at": {
+                "type": "string"
+               },
+               "facts": {
+                "additionalProperties": false,
+                "properties": {
+                 "cash_percent": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "cash_value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "date_basis": {
+                  "type": "string"
+                 },
+                 "limitations": {
+                  "items": {
+                   "type": "string"
+                  },
+                  "type": "array"
+                 },
+                 "portfolio_value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "positions": {
+                  "items": {
+                   "additionalProperties": false,
+                   "properties": {
+                    "name": {
+                     "type": [
+                      "string",
+                      "null"
+                     ]
+                    },
+                    "percent": {
+                     "type": [
+                      "number",
+                      "null"
+                     ]
+                    },
+                    "quantity": {
+                     "type": [
+                      "number",
+                      "null"
+                     ]
+                    },
+                    "value": {
+                     "type": [
+                      "number",
+                      "null"
+                     ]
+                    }
+                   },
+                   "required": [
+                    "name",
+                    "quantity",
+                    "value",
+                    "percent"
+                   ],
+                   "type": "object"
+                  },
+                  "type": "array"
+                 },
+                 "received_at": {
+                  "type": "string"
+                 },
+                 "reported_at": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 },
+                 "scope": {
+                  "type": "string"
+                 },
+                 "valuation_at": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 }
+                },
+                "required": [
+                 "cash_value",
+                 "portfolio_value",
+                 "cash_percent",
+                 "positions",
+                 "received_at",
+                 "reported_at",
+                 "valuation_at",
+                 "date_basis",
+                 "limitations",
+                 "scope"
+                ],
+                "type": "object"
+               },
+               "observed_at": {
+                "type": "string"
+               },
+               "portfolio_kind": {
+                "type": "string"
+               },
+               "source_available": {
+                "type": "boolean"
+               },
+               "uuid": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "uuid",
+               "observed_at",
+               "captured_at",
+               "portfolio_kind",
+               "facts",
+               "source_available",
+               "brief_available"
+              ],
+              "type": "object"
+             },
+             "type": "array"
+            },
+            "kind": {
+             "type": "string"
+            },
+            "revision": {
+             "type": "integer"
+            },
+            "status": {
+             "type": "string"
+            },
+            "strategy_current": {
+             "type": "boolean"
+            },
+            "topic_key": {
+             "type": "string"
+            },
+            "updated_at": {
+             "type": "string"
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "topic_key",
+            "kind",
+            "status",
+            "revision",
+            "strategy_current",
+            "details",
+            "updated_at",
+            "evidence"
+           ],
+           "type": "object"
+          },
+          {
+           "additionalProperties": false,
+           "properties": {
+            "action": {
+             "type": "string"
+            },
+            "advisory_uuid": {
+             "type": "string"
+            },
+            "created_at": {
+             "type": "string"
+            },
+            "source": {
+             "type": "string"
+            },
+            "text": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "action",
+            "text",
+            "source",
+            "created_at",
+            "advisory_uuid"
+           ],
+           "type": "object"
+          }
+         ]
+        },
+        "type": "array"
+       },
+       "next_cursor": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "items",
+       "next_cursor"
+      ],
+      "type": "object"
+     },
+     "memory_kind": {
+      "enum": [
+       "evidence",
+       "question",
+       "response"
+      ],
+      "type": "string"
+     },
+     "strategy_name": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "strategy_name",
+     "intelligence",
+     "limits",
+     "assessments",
+     "memory_kind",
+     "memories"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Assessment"
+   },
+   "description": "Privately inspect Strategy Intelligence assessment data. Restricted to the allowed account and its own strategies. Read-only; never starts checks. Exact call content expires after one year; missing history is explicitly unavailable.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "assessment_uuid": {
+      "type": "string"
+     },
+     "before": {
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "assessment_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_assessment",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "attempts": {
+      "type": "integer"
+     },
+     "call_count": {
+      "type": "integer"
+     },
+     "calls": {
+      "additionalProperties": false,
+      "properties": {
+       "items": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "assessment_uuid": {
+           "type": "string"
+          },
+          "attempt": {
+           "type": "integer"
+          },
+          "capture_status": {
+           "type": "string"
+          },
+          "capture_version": {
+           "type": "string"
+          },
+          "duration_ms": {
+           "type": [
+            "integer",
+            "null"
+           ]
+          },
+          "engine_version": {
+           "type": "string"
+          },
+          "expires_at": {
+           "type": "string"
+          },
+          "finished_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "model": {
+           "type": "string"
+          },
+          "prompt_fingerprint": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "sequence": {
+           "type": "integer"
+          },
+          "started_at": {
+           "type": "string"
+          },
+          "uuid": {
+           "type": "string"
+          },
+          "worker_token": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "uuid",
+          "assessment_uuid",
+          "sequence",
+          "attempt",
+          "worker_token",
+          "capture_status",
+          "capture_version",
+          "engine_version",
+          "model",
+          "prompt_fingerprint",
+          "started_at",
+          "finished_at",
+          "expires_at",
+          "duration_ms"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "next_cursor": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "items",
+       "next_cursor"
+      ],
+      "type": "object"
+     },
+     "capture_gap_count": {
+      "type": "integer"
+     },
+     "capture_status": {
+      "type": "string"
+     },
+     "completed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "engine_version": {
+      "type": "string"
+     },
+     "error_code": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "history_notice": {
+      "type": "string"
+     },
+     "input_evidence": {
+      "items": {
+       "additionalProperties": false,
+       "properties": {
+        "brief_available": {
+         "type": "boolean"
+        },
+        "captured_at": {
+         "type": "string"
+        },
+        "facts": {
+         "additionalProperties": false,
+         "properties": {
+          "cash_percent": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "cash_value": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "date_basis": {
+           "type": "string"
+          },
+          "limitations": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "portfolio_value": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "positions": {
+           "items": {
+            "additionalProperties": false,
+            "properties": {
+             "name": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "percent": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "quantity": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "value": {
+              "type": [
+               "number",
+               "null"
+              ]
+             }
+            },
+            "required": [
+             "name",
+             "quantity",
+             "value",
+             "percent"
+            ],
+            "type": "object"
+           },
+           "type": "array"
+          },
+          "received_at": {
+           "type": "string"
+          },
+          "reported_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "scope": {
+           "type": "string"
+          },
+          "valuation_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "cash_value",
+          "portfolio_value",
+          "cash_percent",
+          "positions",
+          "received_at",
+          "reported_at",
+          "valuation_at",
+          "date_basis",
+          "limitations",
+          "scope"
+         ],
+         "type": "object"
+        },
+        "observed_at": {
+         "type": "string"
+        },
+        "portfolio_kind": {
+         "type": "string"
+        },
+        "source_available": {
+         "type": "boolean"
+        },
+        "uuid": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "uuid",
+        "observed_at",
+        "captured_at",
+        "portfolio_kind",
+        "facts",
+        "source_available",
+        "brief_available"
+       ],
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "recorded_output": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "selection_capture_status": {
+      "type": "string"
+     },
+     "selection_snapshot": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "started_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "enum": [
+       "queued",
+       "running",
+       "completed",
+       "failed",
+       "superseded"
+      ],
+      "type": "string"
+     },
+     "strategy_digest": {
+      "type": "string"
+     },
+     "strategy_revision": {
+      "type": "integer"
+     },
+     "trigger": {
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "status",
+     "strategy_revision",
+     "created_at",
+     "completed_at",
+     "error_code",
+     "attempts",
+     "trigger",
+     "started_at",
+     "engine_version",
+     "strategy_digest",
+     "call_count",
+     "capture_status",
+     "selection_capture_status",
+     "selection_snapshot",
+     "recorded_output",
+     "input_evidence",
+     "calls",
+     "history_notice",
+     "capture_gap_count"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Assessment Call"
+   },
+   "description": "Privately inspect Strategy Intelligence call data. Restricted to the allowed account and its own strategies. Read-only; never starts checks. Exact call content expires after one year; missing history is explicitly unavailable.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "call_uuid": {
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "call_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_assessment_call",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "assessment_uuid": {
+      "type": "string"
+     },
+     "attempt": {
+      "type": "integer"
+     },
+     "capture_status": {
+      "type": "string"
+     },
+     "capture_version": {
+      "type": "string"
+     },
+     "diagnostics": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "duration_ms": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "engine_version": {
+      "type": "string"
+     },
+     "expires_at": {
+      "type": "string"
+     },
+     "finished_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "model": {
+      "type": "string"
+     },
+     "prompt_fingerprint": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "publication_payload": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "request_payload": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "result_payload": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "sequence": {
+      "type": "integer"
+     },
+     "started_at": {
+      "type": "string"
+     },
+     "uuid": {
+      "type": "string"
+     },
+     "validation_payload": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "worker_token": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "uuid",
+     "assessment_uuid",
+     "sequence",
+     "attempt",
+     "worker_token",
+     "capture_status",
+     "capture_version",
+     "engine_version",
+     "model",
+     "prompt_fingerprint",
+     "started_at",
+     "finished_at",
+     "expires_at",
+     "duration_ms",
+     "request_payload",
+     "result_payload",
+     "validation_payload",
+     "publication_payload",
+     "diagnostics"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Show Strategy Intelligence Memory"
+   },
+   "description": "Privately inspect Strategy Intelligence memory data. Restricted to the allowed account and its own strategies. Read-only; never starts checks. Exact call content expires after one year; missing history is explicitly unavailable.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "before": {
+      "type": "string"
+     },
+     "kind": {
+      "enum": [
+       "evidence",
+       "question",
+       "response"
+      ],
+      "type": "string"
+     },
+     "memory_uuid": {
+      "type": "string"
+     },
+     "response_before": {
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "kind",
+     "memory_uuid"
+    ],
+    "type": "object"
+   },
+   "name": "kova_show_strategy_intelligence_memory",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "history": {
+      "additionalProperties": false,
+      "properties": {
+       "items": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "assessment_uuid": {
+           "type": "string"
+          },
+          "attempt": {
+           "type": "integer"
+          },
+          "capture_status": {
+           "type": "string"
+          },
+          "capture_version": {
+           "type": "string"
+          },
+          "duration_ms": {
+           "type": [
+            "integer",
+            "null"
+           ]
+          },
+          "engine_version": {
+           "type": "string"
+          },
+          "expires_at": {
+           "type": "string"
+          },
+          "finished_at": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "included": {
+           "type": [
+            "boolean",
+            "null"
+           ]
+          },
+          "model": {
+           "type": "string"
+          },
+          "prompt_fingerprint": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "referenced": {
+           "type": [
+            "boolean",
+            "null"
+           ]
+          },
+          "sequence": {
+           "type": "integer"
+          },
+          "started_at": {
+           "type": "string"
+          },
+          "uuid": {
+           "type": "string"
+          },
+          "worker_token": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "uuid",
+          "assessment_uuid",
+          "sequence",
+          "attempt",
+          "worker_token",
+          "capture_status",
+          "capture_version",
+          "engine_version",
+          "model",
+          "prompt_fingerprint",
+          "started_at",
+          "finished_at",
+          "expires_at",
+          "duration_ms",
+          "included",
+          "referenced"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "next_cursor": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "items",
+       "next_cursor"
+      ],
+      "type": "object"
+     },
+     "history_notice": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "question": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "details": {
+          "additionalProperties": false,
+          "properties": {
+           "last_response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "needs_strategy_revision": {
+            "type": "boolean"
+           },
+           "observation": {
+            "type": "string"
+           },
+           "question": {
+            "type": "string"
+           },
+           "quote": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "relevance": {
+            "type": "string"
+           },
+           "reopening_reason": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "resolution": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_interpretation": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_pending": {
+            "type": "boolean"
+           },
+           "response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "title": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "title",
+           "observation",
+           "relevance",
+           "question"
+          ],
+          "type": "object"
+         },
+         "evidence": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "brief_available": {
+             "type": "boolean"
+            },
+            "captured_at": {
+             "type": "string"
+            },
+            "facts": {
+             "additionalProperties": false,
+             "properties": {
+              "cash_percent": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "cash_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "date_basis": {
+               "type": "string"
+              },
+              "limitations": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "portfolio_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "positions": {
+               "items": {
+                "additionalProperties": false,
+                "properties": {
+                 "name": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 },
+                 "percent": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "quantity": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 }
+                },
+                "required": [
+                 "name",
+                 "quantity",
+                 "value",
+                 "percent"
+                ],
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "received_at": {
+               "type": "string"
+              },
+              "reported_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "scope": {
+               "type": "string"
+              },
+              "valuation_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "cash_value",
+              "portfolio_value",
+              "cash_percent",
+              "positions",
+              "received_at",
+              "reported_at",
+              "valuation_at",
+              "date_basis",
+              "limitations",
+              "scope"
+             ],
+             "type": "object"
+            },
+            "observed_at": {
+             "type": "string"
+            },
+            "portfolio_kind": {
+             "type": "string"
+            },
+            "source_available": {
+             "type": "boolean"
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "observed_at",
+            "captured_at",
+            "portfolio_kind",
+            "facts",
+            "source_available",
+            "brief_available"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "kind": {
+          "type": "string"
+         },
+         "revision": {
+          "type": "integer"
+         },
+         "status": {
+          "type": "string"
+         },
+         "strategy_current": {
+          "type": "boolean"
+         },
+         "topic_key": {
+          "type": "string"
+         },
+         "updated_at": {
+          "type": "string"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "topic_key",
+         "kind",
+         "status",
+         "revision",
+         "strategy_current",
+         "details",
+         "updated_at",
+         "evidence"
+        ],
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "record": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "brief_available": {
+          "type": "boolean"
+         },
+         "captured_at": {
+          "type": "string"
+         },
+         "facts": {
+          "additionalProperties": false,
+          "properties": {
+           "cash_percent": {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           "cash_value": {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           "date_basis": {
+            "type": "string"
+           },
+           "limitations": {
+            "items": {
+             "type": "string"
+            },
+            "type": "array"
+           },
+           "portfolio_value": {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           "positions": {
+            "items": {
+             "additionalProperties": false,
+             "properties": {
+              "name": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "percent": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "quantity": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "name",
+              "quantity",
+              "value",
+              "percent"
+             ],
+             "type": "object"
+            },
+            "type": "array"
+           },
+           "received_at": {
+            "type": "string"
+           },
+           "reported_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "scope": {
+            "type": "string"
+           },
+           "valuation_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "cash_value",
+           "portfolio_value",
+           "cash_percent",
+           "positions",
+           "received_at",
+           "reported_at",
+           "valuation_at",
+           "date_basis",
+           "limitations",
+           "scope"
+          ],
+          "type": "object"
+         },
+         "observed_at": {
+          "type": "string"
+         },
+         "portfolio_kind": {
+          "type": "string"
+         },
+         "source_available": {
+          "type": "boolean"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "observed_at",
+         "captured_at",
+         "portfolio_kind",
+         "facts",
+         "source_available",
+         "brief_available"
+        ],
+        "type": "object"
+       },
+       {
+        "additionalProperties": false,
+        "properties": {
+         "details": {
+          "additionalProperties": false,
+          "properties": {
+           "last_response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "needs_strategy_revision": {
+            "type": "boolean"
+           },
+           "observation": {
+            "type": "string"
+           },
+           "question": {
+            "type": "string"
+           },
+           "quote": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "relevance": {
+            "type": "string"
+           },
+           "reopening_reason": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "resolution": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_interpretation": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "response_pending": {
+            "type": "boolean"
+           },
+           "response_uuid": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "title": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "title",
+           "observation",
+           "relevance",
+           "question"
+          ],
+          "type": "object"
+         },
+         "evidence": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "brief_available": {
+             "type": "boolean"
+            },
+            "captured_at": {
+             "type": "string"
+            },
+            "facts": {
+             "additionalProperties": false,
+             "properties": {
+              "cash_percent": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "cash_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "date_basis": {
+               "type": "string"
+              },
+              "limitations": {
+               "items": {
+                "type": "string"
+               },
+               "type": "array"
+              },
+              "portfolio_value": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "positions": {
+               "items": {
+                "additionalProperties": false,
+                "properties": {
+                 "name": {
+                  "type": [
+                   "string",
+                   "null"
+                  ]
+                 },
+                 "percent": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "quantity": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 },
+                 "value": {
+                  "type": [
+                   "number",
+                   "null"
+                  ]
+                 }
+                },
+                "required": [
+                 "name",
+                 "quantity",
+                 "value",
+                 "percent"
+                ],
+                "type": "object"
+               },
+               "type": "array"
+              },
+              "received_at": {
+               "type": "string"
+              },
+              "reported_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "scope": {
+               "type": "string"
+              },
+              "valuation_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "cash_value",
+              "portfolio_value",
+              "cash_percent",
+              "positions",
+              "received_at",
+              "reported_at",
+              "valuation_at",
+              "date_basis",
+              "limitations",
+              "scope"
+             ],
+             "type": "object"
+            },
+            "observed_at": {
+             "type": "string"
+            },
+            "portfolio_kind": {
+             "type": "string"
+            },
+            "source_available": {
+             "type": "boolean"
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "observed_at",
+            "captured_at",
+            "portfolio_kind",
+            "facts",
+            "source_available",
+            "brief_available"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "kind": {
+          "type": "string"
+         },
+         "revision": {
+          "type": "integer"
+         },
+         "status": {
+          "type": "string"
+         },
+         "strategy_current": {
+          "type": "boolean"
+         },
+         "topic_key": {
+          "type": "string"
+         },
+         "updated_at": {
+          "type": "string"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "topic_key",
+         "kind",
+         "status",
+         "revision",
+         "strategy_current",
+         "details",
+         "updated_at",
+         "evidence"
+        ],
+        "type": "object"
+       },
+       {
+        "additionalProperties": false,
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "advisory_uuid": {
+          "type": "string"
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "source": {
+          "type": "string"
+         },
+         "text": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "action",
+         "text",
+         "source",
+         "created_at",
+         "advisory_uuid"
+        ],
+        "type": "object"
+       }
+      ]
+     },
+     "responses": {
+      "anyOf": [
+       {
+        "additionalProperties": false,
+        "properties": {
+         "items": {
+          "items": {
+           "additionalProperties": false,
+           "properties": {
+            "action": {
+             "type": "string"
+            },
+            "advisory_uuid": {
+             "type": "string"
+            },
+            "created_at": {
+             "type": "string"
+            },
+            "source": {
+             "type": "string"
+            },
+            "text": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "uuid": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "uuid",
+            "action",
+            "text",
+            "source",
+            "created_at",
+            "advisory_uuid"
+           ],
+           "type": "object"
+          },
+          "type": "array"
+         },
+         "next_cursor": {
+          "type": [
+           "string",
+           "null"
+          ]
+         }
+        },
+        "required": [
+         "items",
+         "next_cursor"
+        ],
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "kind",
+     "record",
+     "history",
+     "history_notice",
+     "responses",
+     "question"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  },
+  {
+   "_meta": {
+    "securitySchemes": [
+     {
+      "scopes": [],
+      "type": "oauth2"
+     }
+    ]
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "readOnlyHint": true,
+    "title": "Compare Strategy Assessments"
+   },
+   "description": "Privately inspect Strategy Intelligence compare data. Restricted to the allowed account and its own strategies. Read-only; never starts checks. Exact call content expires after one year; missing history is explicitly unavailable.",
+   "inputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "from": {
+      "type": "string"
+     },
+     "from_call": {
+      "type": "string"
+     },
+     "strategy_uuid": {
+      "type": "string"
+     },
+     "to": {
+      "type": "string"
+     },
+     "to_call": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "strategy_uuid",
+     "from",
+     "to"
+    ],
+    "type": "object"
+   },
+   "name": "kova_compare_strategy_assessments",
+   "outputSchema": {
+    "additionalProperties": false,
+    "properties": {
+     "changes": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "from": {
+      "additionalProperties": false,
+      "properties": {
+       "assessment": {
+        "additionalProperties": false,
+        "properties": {
+         "attempts": {
+          "type": "integer"
+         },
+         "call_count": {
+          "type": "integer"
+         },
+         "capture_gap_count": {
+          "type": "integer"
+         },
+         "capture_status": {
+          "type": "string"
+         },
+         "completed_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "engine_version": {
+          "type": "string"
+         },
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "started_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "status": {
+          "enum": [
+           "queued",
+           "running",
+           "completed",
+           "failed",
+           "superseded"
+          ],
+          "type": "string"
+         },
+         "strategy_digest": {
+          "type": "string"
+         },
+         "strategy_revision": {
+          "type": "integer"
+         },
+         "trigger": {
+          "type": "string"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "status",
+         "strategy_revision",
+         "created_at",
+         "completed_at",
+         "error_code",
+         "attempts",
+         "trigger",
+         "started_at",
+         "engine_version",
+         "strategy_digest",
+         "call_count",
+         "capture_status",
+         "capture_gap_count"
+        ],
+        "type": "object"
+       },
+       "call": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "assessment_uuid": {
+            "type": "string"
+           },
+           "attempt": {
+            "type": "integer"
+           },
+           "capture_status": {
+            "type": "string"
+           },
+           "capture_version": {
+            "type": "string"
+           },
+           "diagnostics": {
+            "items": {
+             "type": "string"
+            },
+            "type": "array"
+           },
+           "duration_ms": {
+            "type": [
+             "integer",
+             "null"
+            ]
+           },
+           "engine_version": {
+            "type": "string"
+           },
+           "expires_at": {
+            "type": "string"
+           },
+           "finished_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "model": {
+            "type": "string"
+           },
+           "prompt_fingerprint": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "publication_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "request_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "result_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "sequence": {
+            "type": "integer"
+           },
+           "started_at": {
+            "type": "string"
+           },
+           "uuid": {
+            "type": "string"
+           },
+           "validation_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "worker_token": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "assessment_uuid",
+           "sequence",
+           "attempt",
+           "worker_token",
+           "capture_status",
+           "capture_version",
+           "engine_version",
+           "model",
+           "prompt_fingerprint",
+           "started_at",
+           "finished_at",
+           "expires_at",
+           "duration_ms",
+           "request_payload",
+           "result_payload",
+           "validation_payload",
+           "publication_payload",
+           "diagnostics"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "assessment",
+       "call"
+      ],
+      "type": "object"
+     },
+     "inputs_available": {
+      "type": "boolean"
+     },
+     "publication_changes": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "to": {
+      "additionalProperties": false,
+      "properties": {
+       "assessment": {
+        "additionalProperties": false,
+        "properties": {
+         "attempts": {
+          "type": "integer"
+         },
+         "call_count": {
+          "type": "integer"
+         },
+         "capture_gap_count": {
+          "type": "integer"
+         },
+         "capture_status": {
+          "type": "string"
+         },
+         "completed_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "engine_version": {
+          "type": "string"
+         },
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "started_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "status": {
+          "enum": [
+           "queued",
+           "running",
+           "completed",
+           "failed",
+           "superseded"
+          ],
+          "type": "string"
+         },
+         "strategy_digest": {
+          "type": "string"
+         },
+         "strategy_revision": {
+          "type": "integer"
+         },
+         "trigger": {
+          "type": "string"
+         },
+         "uuid": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "uuid",
+         "status",
+         "strategy_revision",
+         "created_at",
+         "completed_at",
+         "error_code",
+         "attempts",
+         "trigger",
+         "started_at",
+         "engine_version",
+         "strategy_digest",
+         "call_count",
+         "capture_status",
+         "capture_gap_count"
+        ],
+        "type": "object"
+       },
+       "call": {
+        "anyOf": [
+         {
+          "additionalProperties": false,
+          "properties": {
+           "assessment_uuid": {
+            "type": "string"
+           },
+           "attempt": {
+            "type": "integer"
+           },
+           "capture_status": {
+            "type": "string"
+           },
+           "capture_version": {
+            "type": "string"
+           },
+           "diagnostics": {
+            "items": {
+             "type": "string"
+            },
+            "type": "array"
+           },
+           "duration_ms": {
+            "type": [
+             "integer",
+             "null"
+            ]
+           },
+           "engine_version": {
+            "type": "string"
+           },
+           "expires_at": {
+            "type": "string"
+           },
+           "finished_at": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "model": {
+            "type": "string"
+           },
+           "prompt_fingerprint": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "publication_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "request_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "result_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "sequence": {
+            "type": "integer"
+           },
+           "started_at": {
+            "type": "string"
+           },
+           "uuid": {
+            "type": "string"
+           },
+           "validation_payload": {
+            "type": [
+             "object",
+             "null"
+            ]
+           },
+           "worker_token": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "uuid",
+           "assessment_uuid",
+           "sequence",
+           "attempt",
+           "worker_token",
+           "capture_status",
+           "capture_version",
+           "engine_version",
+           "model",
+           "prompt_fingerprint",
+           "started_at",
+           "finished_at",
+           "expires_at",
+           "duration_ms",
+           "request_payload",
+           "result_payload",
+           "validation_payload",
+           "publication_payload",
+           "diagnostics"
+          ],
+          "type": "object"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "assessment",
+       "call"
+      ],
+      "type": "object"
+     },
+     "validation_changes": {
+      "type": [
+       "object",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "from",
+     "to",
+     "inputs_available",
+     "changes",
+     "validation_changes",
+     "publication_changes"
+    ],
+    "type": "object"
+   },
+   "securitySchemes": [
+    {
+     "scopes": [],
+     "type": "oauth2"
+    }
+   ]
+  }
+ ]
+}

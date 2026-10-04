@@ -39,6 +39,23 @@ Authentication happens through Kova's OAuth flow. The plugin contains no credent
 
 The directory containing `plugin.json` is the plugin root. Install the repository root, not its `skills/` directory.
 
+### Claude Code
+
+```sh
+claude plugin marketplace add kovatools/kova-agent-plugin
+claude plugin install kova@kova
+```
+
+Run `/mcp` once to sign in to Kova. To try it without installing, start a session with `claude --plugin-dir /absolute/path/to/kova-agent-plugin`.
+
+### Gemini CLI
+
+```sh
+gemini extensions install https://github.com/kovatools/kova-agent-plugin
+```
+
+The extension connects to `https://kovatools.com/mcp` and signs in through Kova's OAuth flow on first use.
+
 ### VS Code: install directly from Git
 
 VS Code can clone and install a plugin from its repository URL:

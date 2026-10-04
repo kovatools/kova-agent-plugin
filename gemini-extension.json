@@ -1,0 +1,13 @@
+{
+  "name": "kova",
+  "version": "0.1.1",
+  "description": "Kova strategy creation and portfolio alignment workflows for compatible AI agents.",
+  "mcpServers": {
+    "kova": {
+      "httpUrl": "https://kovatools.com/mcp",
+      "oauth": {
+        "enabled": true
+      }
+    }
+  }
+}
