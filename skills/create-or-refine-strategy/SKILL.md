@@ -178,7 +178,7 @@ Using Kova:
 - Silently inspect whether kova_* tools are available. Do not interrupt the
   interview to discuss connection status.
 - If they are available, silently call kova_list_strategies before your
-  opening question. If I already have strategies, mention them once and ask
+  opening question. If I have strategies and my intent is unclear, mention them once and ask
   whether I want to update one or start new.
 - If I choose an existing strategy, let me select the exact one. Call
   kova_show_strategy with its returned UUID, use its current content as the
@@ -187,7 +187,7 @@ Using Kova:
   strategy with kova_save_strategy. Never use kova_create_strategy for an
   update or change the strategy merely to make current holdings appear
   aligned.
-- If I choose a new strategy, show me the draft before saving. Save only
+- If I choose or explicitly request a new strategy, show me the draft before saving. Save only
   after I explicitly approve it. kova_create_strategy requires a name and
   the full strategy content. Use a title I provide. Otherwise use
   "Investment Strategy."

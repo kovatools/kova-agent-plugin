@@ -5,11 +5,15 @@ description: Check how a portfolio aligns with a saved Kova investment strategy 
 
 # Check Kova strategy alignment
 
+
 Read existing Kova data freely, but obtain explicit approval before starting a new evaluation. A new evaluation can update the portfolio on file and creates a persisted brief.
+
+If the user explicitly asks to save supplied strategy content as a new strategy during an alignment workflow, treat “new” as decided. Draft the full strategy in the user’s own terms and show exactly what Kova would save. After approval for that write, call `kova_create_strategy` with a name and the full approved content. Do not ask “new or update?” or overwrite an existing strategy. Ask separately before a new portfolio evaluation.
 
 ## Resolve the strategy and request
 
-Use `kova_list_strategies` when needed and retain the exact strategy UUID. Call `kova_show_strategy` to confirm the selected strategy.
+
+For an existing saved strategy, use `kova_list_strategies` when needed, retain its exact UUID, and call `kova_show_strategy` to confirm it. For a newly created strategy, use the UUID returned by `kova_create_strategy`.
 
 Determine whether the user wants:
 
