@@ -10,7 +10,7 @@
       "name": "kova",
       "source": "./",
       "description": "Kova strategy creation and portfolio alignment workflows for compatible AI agents.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "author": {
         "name": "Kova"
       }
