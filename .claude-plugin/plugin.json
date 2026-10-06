@@ -9,6 +9,7 @@
   },
   "homepage": "https://kovatools.com/agents",
   "repository": "https://github.com/kovatools/kova-agent-plugin",
+  "privacyPolicyUrl": "https://kovatools.com/privacy",
   "license": "MIT",
   "keywords": [
     "investment-strategy",
